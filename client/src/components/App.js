@@ -6,7 +6,7 @@ import FilmsList from "./films"
 import FilmForm from "./forms/FilmForm"
 import TopNavigation from "./TopNavigation"
 import FilmContext from "./context/FilmContext"
-import {films as items} from "../data"
+import api from '../api'
 
 export class App extends Component {
   state = {
@@ -16,11 +16,8 @@ export class App extends Component {
   }
 
   componentDidMount() {
-    axios.get("/api/test").then(res => console.log(res.data.mes))
-    this.setState({
-      films: this.sortFilms(items),
-    })
-  }
+        api.films.fetchAll().then(films => this.setState({films: this.sortFilms(films)}))
+    }
 
   sortFilms = films => _orderBy(films, ["featured", "title"], ["desc", "asc"])
 
@@ -37,10 +34,13 @@ export class App extends Component {
     film._id === null ? this.addFilm(film) : this.updateFilm(film)
 
   addFilm = film =>
-    this.setState(({films, showAddForm}) => ({
-      films: this.sortFilms([...films, {...film, _id: id()}]),
-      showAddForm: false,
-    }))
+      api.films.create(film).then(film => {
+          this.setState(({films}) => ({
+              films: this.sortFilms([...films, {...film}]),
+              showAddForm: false,
+          }))
+      })
+
 
   updateFilm = film =>
     this.setState(({films, showAddForm}) => ({

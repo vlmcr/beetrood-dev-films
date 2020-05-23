@@ -87,8 +87,10 @@ class FilmForm extends Component {
     const errors = this.validate(this.state.data)
     this.setState({errors})
     if (Object.keys(errors).length === 0) {
-      this.props.saveFilm(this.state.data)
-      this.setState({data: initData})
+      this.props
+          .saveFilm(this.state.data)
+          .catch(err => this.setState({errors: err.response.data.errors}))
+      // this.setState({data: initData})
     }
   }
 
