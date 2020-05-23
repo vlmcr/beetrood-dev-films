@@ -93,7 +93,8 @@ class FilmForm extends Component {
       setTimeout(() => {
         this.props
             .saveFilm(this.state.data)
-            .catch(err => this.setState({errors: err.response.data.errors, loading: false}))
+            .catch(err => this.setState({errors: err.response.data.errors}))
+            .finally(() => this.setState({loading: false}))
       }, 3000)
       // this.setState({data: initData})
     }

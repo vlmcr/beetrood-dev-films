@@ -43,10 +43,13 @@ export class App extends Component {
 
 
   updateFilm = film =>
-    this.setState(({films, showAddForm}) => ({
-      films: this.sortFilms(films.map(f => (f._id === film._id ? film : f))),
-      showAddForm: false,
-    }))
+      api.films.update(film).then(film => {
+          this.setState(({films}) => ({
+            films: this.sortFilms(films.map(f => (f._id === film._id ? film : f))),
+            showAddForm: false,
+          }))
+      })
+
 
   showForm = () => this.setState({showAddForm: true, selectedFilm: {}})
 
