@@ -16,6 +16,7 @@ const initData = {
 
 class FilmForm extends Component {
   state = {
+    loading: false,
     data: initData,
     errors: {},
   }
@@ -87,17 +88,23 @@ class FilmForm extends Component {
     const errors = this.validate(this.state.data)
     this.setState({errors})
     if (Object.keys(errors).length === 0) {
-      this.props
-          .saveFilm(this.state.data)
-          .catch(err => this.setState({errors: err.response.data.errors}))
+      this.setState({loading: true});
+
+      setTimeout(() => {
+        this.props
+            .saveFilm(this.state.data)
+            .catch(err => this.setState({errors: err.response.data.errors, loading: false}))
+      }, 3000)
       // this.setState({data: initData})
     }
   }
 
   render() {
-    const {data, errors} = this.state
+    const {data, errors, loading} = this.state
+    const classForm = loading ? "ui form loading" : "ui form";
+
     return (
-      <form onSubmit={this.handleSubmit} className="ui form">
+      <form onSubmit={this.handleSubmit} className={classForm}>
         {/* ui grid START */}
         <div className="ui  grid">
           <div className="twelve wide column">
