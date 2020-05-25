@@ -7,6 +7,7 @@ import FilmForm from "./forms/FilmForm"
 import TopNavigation from "./TopNavigation"
 import FilmContext from "./context/FilmContext"
 import api from '../api'
+import {find} from "lodash/collection";
 
 export class App extends Component {
   state = {
@@ -21,14 +22,18 @@ export class App extends Component {
 
   sortFilms = films => _orderBy(films, ["featured", "title"], ["desc", "asc"])
 
-  toggleFeatured = id => e =>
-    this.setState(({films}) => ({
-      films: this.sortFilms(
-        films.map(film =>
-          film._id === id ? {...film, featured: !film.featured} : film,
-        ),
-      ),
-    }))
+  toggleFeatured = id => e => {
+      const film = find(this.state.films, {_id: id})
+      return this.updateFilm({...film, featured: !film.featured})
+  }
+
+  deleteFilm = film =>
+    api.films.delete(film).then(() =>
+      this.setState(({items}) => ({
+        items: this.sortFilms(items.filter(item => item._id !== film._id)),
+      })),
+  )
+
 
   saveFilm = film =>
     film._id === null ? this.addFilm(film) : this.updateFilm(film)
