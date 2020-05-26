@@ -1,7 +1,7 @@
 import React, {Component} from "react"
-import PropTypes from "prop-types"
 import ReactImageFallback from "react-image-fallback"
 import FormMessage from "./FormMessage"
+import {Link, Redirect} from "react-router-dom";
 
 const initData = {
 	_id: null,
@@ -19,6 +19,7 @@ class FilmForm extends Component {
     loading: false,
     data: initData,
     errors: {},
+    redirect: false
   }
 
   componentDidMount() {
@@ -90,22 +91,23 @@ class FilmForm extends Component {
     if (Object.keys(errors).length === 0) {
       this.setState({loading: true});
 
-      setTimeout(() => {
-        this.props
-            .saveFilm(this.state.data)
-            .catch(err => this.setState({errors: err.response.data.errors}))
-            .finally(() => this.setState({loading: false}))
-      }, 3000)
+      this.props
+          .submit(this.state.data)
+          .then(() => this.setState({redirect: true}))
+          .catch(err => this.setState({errors: err.response.data.errors}))
+          .finally(() => this.setState({loading: false}))
       // this.setState({data: initData})
     }
   }
 
   render() {
-    const {data, errors, loading} = this.state
+    const {data, errors, loading, redirect} = this.state
     const classForm = loading ? "ui form loading" : "ui form";
 
     return (
       <form onSubmit={this.handleSubmit} className={classForm}>
+        {/*{redirect && <Redirect to="/films"/>}*/}
+
         {/* ui grid START */}
         <div className="ui  grid">
           <div className="twelve wide column">
@@ -241,19 +243,17 @@ class FilmForm extends Component {
           <button className="ui button primary" type="submit">
             Save
           </button>
+
           <div className="or"></div>
-          <span className="ui button" onClick={this.props.hideForm}>
+
+          <Link to="/films" className="ui button">
             Hide form
-          </span>
+          </Link>
         </div>
         {/*  Buttons END */}
       </form>
     )
   }
-}
-
-FilmForm.propTypes = {
-  hideForm: PropTypes.func.isRequired,
 }
 
 export default FilmForm

@@ -2,15 +2,14 @@ import React, {Component} from "react"
 import _orderBy from "lodash/orderBy"
 import FilmsList from "./films"
 import FilmForm from "./forms/FilmForm"
-import TopNavigation from "./TopNavigation"
 import FilmContext from "./context/FilmContext"
 import api from '../api'
 import {find} from "lodash/collection";
+import {Route} from "react-router-dom";
 
 export class FilmsPage extends Component {
   state = {
     films: [],
-    selectedFilm: {},
     loading: true,
   }
 
@@ -34,9 +33,9 @@ export class FilmsPage extends Component {
       })),
   )
 
-
   saveFilm = film =>
-    film._id === null ? this.addFilm(film) : this.updateFilm(film)
+    (film._id === null ? this.addFilm(film) : this.updateFilm(film))
+      .then(() => this.props.history.push("/films"))
 
   addFilm = film =>
       api.films.create(film).then(film => {
@@ -53,31 +52,45 @@ export class FilmsPage extends Component {
           }))
       })
 
-  selectFilmForEdit = selectedFilm => () =>
-    this.setState({
-      selectedFilm,
-    })
-
   deleteFilm = film => e =>
     this.setState(({films}) => ({
-      films: this.sortFilms(films.filter(f => f._id !== film._id)),
-      selectedFilm: {}
+      films: this.sortFilms(films.filter(f => f._id !== film._id))
     }))
 
   render() {
-    const {films, selectedFilm} = this.state;
+    const {films} = this.state;
     const numCol = this.props.location.pathname === "/films" ? "sixteen" : "ten";
 
     return (
       <FilmContext.Provider
         value={{
           toggleFeatured: this.toggleFeatured,
-          selectFilmForEdit: this.selectFilmForEdit,
           deleteFilm: this.deleteFilm,
         }}
       >
         <div className="ui stackable grid">
 
+          <Route
+            exact
+            path="/films/new"
+            render={() => (
+              <div className="six wide column">
+                <FilmForm submit={this.saveFilm} film={{}} />
+              </div>
+            )}
+          />
+
+          <Route
+            path="/films/edit/:_id"
+            render={props => (
+              <div className="six wide column">
+                <FilmForm
+                  submit={this.saveFilm}
+                  film={find(this.state.films, { _id: props.match.params._id,})}
+                />
+              </div>
+            )}
+          />
 
           <div className={`${numCol} wide column`}>
             {

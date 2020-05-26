@@ -2,13 +2,14 @@ import React, {useState, useContext} from "react"
 import PropTypes from "prop-types"
 import Featured from "./Featured"
 import FilmContext from "../context/FilmContext"
+import {Link} from "react-router-dom";
 
 const FilmCard = ({film}) => {
   const [confirm, setConfirm] = useState(false)
   const showConfirm = () => setConfirm(true)
   const hideConfirm = () => setConfirm(false)
 
-  const {selectFilmForEdit, deleteFilm} = useContext(FilmContext)
+  const {deleteFilm} = useContext(FilmContext)
   return (
     <div className="ui card">
       <span className="ui right corner label">
@@ -46,12 +47,9 @@ const FilmCard = ({film}) => {
             </>
           ) : (
             <>
-              <span
-                className="ui green basic button"
-                onClick={selectFilmForEdit(film)}
-              >
-                <i className="ui icon edit"></i>
-              </span>
+              <Link to={`/films/edit/${film._id}`}  className="ui green basic button">
+                <i className="ui icon edit" />
+              </Link>
               <span className="ui red basic button" onClick={showConfirm}>
                 <i className="ui icon trash"></i>
               </span>

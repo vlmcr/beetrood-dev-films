@@ -1,8 +1,7 @@
 import React from "react"
-import PropTypes from "prop-types"
 import {NavLink} from "react-router-dom"
 
-const TopNavigation = ({showForm}) => {
+const TopNavigation = () => {
   return (
     <div className="ui secondary pointing menu">
       <NavLink exact to="/" className="item">
@@ -19,8 +18,5 @@ const TopNavigation = ({showForm}) => {
   )
 }
 
-TopNavigation.propTypes = {
-  showForm: PropTypes.func.isRequired,
-}
 
 export default TopNavigation

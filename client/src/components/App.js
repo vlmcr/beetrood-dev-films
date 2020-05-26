@@ -9,11 +9,10 @@ export class App extends Component {
     return (
       <div className="ui container pt-3">
         <TopNavigation />
-
         <Route exact path="/">
           <HomePage/>
         </Route>
-        <Route exact path="/films" component={FilmsPage}/>
+        <Route path="/films" component={FilmsPage}/>
       </div>
     )
   }
