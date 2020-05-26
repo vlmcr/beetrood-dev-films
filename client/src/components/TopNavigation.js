@@ -1,16 +1,20 @@
 import React from "react"
 import PropTypes from "prop-types"
+import {NavLink} from "react-router-dom"
 
 const TopNavigation = ({showForm}) => {
   return (
     <div className="ui secondary pointing menu">
-      <a href="/" className="item">
+      <NavLink exact to="/" className="item">
         Home
-      </a>
-      <span className="item" onClick={showForm}>
+      </NavLink>
+      <NavLink exact to="/films" className="item">
+        Films
+      </NavLink>
+      <NavLink to="/films/new" className="item">
         <i className="icon plus"></i>
         Add new film
-      </span>
+      </NavLink>
     </div>
   )
 }
