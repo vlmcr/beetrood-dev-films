@@ -15,6 +15,7 @@ export class App extends Component {
   state = {
     user: {
       token: undefined,
+      role: "",
     }
   }
 
@@ -27,7 +28,7 @@ export class App extends Component {
 
   login = token => {
     this.setState({
-      user: {token}
+      user: {token, role: "user"}
     })
     localStorage.filmsToken = token
     setAuthorizationHeader(token)
@@ -46,7 +47,10 @@ export class App extends Component {
         <Route exact path="/">
           <HomePage/>
         </Route>
-        <Route path="/films" component={FilmsPage} />
+
+        <Route path="/films" render={props => (
+          <FilmsPage {...props} user={this.state.user} />
+        )} />
         <Route path="/film/:_id" exact component={Film} />
 
         <Route path="/singup" exact component={SignupPage} />
