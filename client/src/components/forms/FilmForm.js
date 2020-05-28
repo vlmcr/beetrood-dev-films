@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 import ReactImageFallback from "react-image-fallback"
 import FormMessage from "./FormMessage"
-import {Link, Redirect} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 const initData = {
 	_id: null,
@@ -101,7 +101,7 @@ class FilmForm extends Component {
   }
 
   render() {
-    const {data, errors, loading, redirect} = this.state
+    const {data, errors, loading} = this.state
     const classForm = loading ? "ui form loading" : "ui form";
 
     return (
