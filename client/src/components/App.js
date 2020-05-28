@@ -1,10 +1,12 @@
 import React, {Component} from "react"
 import TopNavigation from "./TopNavigation"
 import {Route} from "react-router-dom";
-import HomePage from "./HomePage";
-import {FilmsPage} from "./FilmsPage";
 import Film from "./films/Film";
-import SignupPage from "./SignupPage";
+import {Async, lazyImport} from "./Async";
+
+const HomePage = Async(lazyImport("./HomePage"));
+const FilmsPage = Async(lazyImport("./FilmsPage"));
+const SignupPage = Async(lazyImport("./SignupPage"));
 
 export class App extends Component {
 
@@ -25,6 +27,7 @@ export class App extends Component {
         </Route>
         <Route path="/films" component={FilmsPage} />
         <Route path="/film/:_id" exact component={Film} />
+
         <Route path="/singup" exact component={SignupPage} />
       </div>
     )
