@@ -5,6 +5,8 @@ import Film from "./films/Film";
 import {Async, lazyImport} from "./Async";
 import {setAuthorizationHeader} from "../utils";
 
+import jwtDecode from 'jwt-decode';
+
 const HomePage = Async(lazyImport("./HomePage"));
 const FilmsPage = Async(lazyImport("./FilmsPage"));
 const SignupPage = Async(lazyImport("./SignupPage"));
@@ -24,14 +26,22 @@ export class App extends Component {
 
   componentDidMount() {
     if (localStorage.filmsToken) {
-      this.setState({user: {token: localStorage.filmsToken}})
+      this.setState({
+        user: {
+          token: localStorage.filmsToken,
+          role: jwtDecode(localStorage.filmsToken).user.role
+        }
+      })
       setAuthorizationHeader(localStorage.filmsToken)
     }
   }
 
   login = token => {
     this.setState({
-      user: {token, role: "user"}
+      user: {
+        token,
+        role: jwtDecode(token).user.role
+      }
     })
     localStorage.filmsToken = token
     setAuthorizationHeader(token)
@@ -48,7 +58,7 @@ export class App extends Component {
 
     return (
       <div className="ui container pt-3">
-        <TopNavigation logout={this.logout} isAuth={user.token} />
+        <TopNavigation logout={this.logout} isAuth={user.token} isAdmin={user.role === "admin"} />
 
         {message && (
           <div className="ui info message">

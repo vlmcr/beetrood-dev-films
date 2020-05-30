@@ -9,7 +9,40 @@ const FilmCard = ({film}) => {
   const showConfirm = () => setConfirm(true)
   const hideConfirm = () => setConfirm(false)
 
-  const {deleteFilm} = useContext(FilmContext)
+  const {deleteFilm, user} = useContext(FilmContext)
+
+  const adminAction = (
+    <div className="extra content">
+      <div className="ui two buttons">
+        {confirm ? (
+          <>
+              <span className="ui red basic button" onClick={deleteFilm(film)}>
+                <i className="ui icon check" />
+                YES
+              </span>
+            <span className="ui grey basic button" onClick={hideConfirm}>
+                <i className="ui icon close" /> NO
+              </span>
+          </>
+        ) : (
+          <>
+            <Link to={`/films/edit/${film._id}`}  className="ui green basic button">
+              <i className="ui icon edit" />
+            </Link>
+            <span className="ui red basic button" onClick={showConfirm}>
+                <i className="ui icon trash"></i>
+              </span>
+          </>
+        )}
+      </div>
+    </div>
+  )
+
+  const userAction = (
+    <div className="extra content">
+      <button className="ui green basic button ">Add to cart</button>
+    </div>
+  )
 
   return (
     <div className="ui card">
@@ -25,6 +58,9 @@ const FilmCard = ({film}) => {
       </div>
 
       <div className="content">
+        {user.token && user.role === "admin" && adminAction}
+        {user.token && user.role === "user" && userAction}
+
         <Link to={`/film/${film._id}`} className="header">
           {film.title}
         </Link>
@@ -34,31 +70,6 @@ const FilmCard = ({film}) => {
           <span className="right floated">
             <i className="icon wait right"></i> {film.duration} min
           </span>
-        </div>
-      </div>
-
-      <div className="extra content">
-        <div className="ui two buttons">
-          {confirm ? (
-            <>
-              <span className="ui red basic button" onClick={deleteFilm(film)}>
-                <i className="ui icon check" />
-                YES
-              </span>
-              <span className="ui grey basic button" onClick={hideConfirm}>
-                <i className="ui icon close" /> NO
-              </span>
-            </>
-          ) : (
-            <>
-              <Link to={`/films/edit/${film._id}`}  className="ui green basic button">
-                <i className="ui icon edit" />
-              </Link>
-              <span className="ui red basic button" onClick={showConfirm}>
-                <i className="ui icon trash"></i>
-              </span>
-            </>
-          )}
         </div>
       </div>
     </div>
