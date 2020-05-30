@@ -23,7 +23,7 @@ const TopNavigation = ({isAuth, logout}) => {
         </div>
       ) : (
         <div className="right menu">
-          <NavLink to="/singup" className="item">
+          <NavLink to="/signup" className="item">
             Sing up
           </NavLink>
           <NavLink to="/login" className="item">

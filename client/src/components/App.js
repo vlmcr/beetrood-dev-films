@@ -16,8 +16,11 @@ export class App extends Component {
     user: {
       token: undefined,
       role: "",
+      message: "",
     }
   }
+
+  setMessage = message => this.setState({message})
 
   componentDidMount() {
     if (localStorage.filmsToken) {
@@ -41,9 +44,19 @@ export class App extends Component {
   }
 
   render() {
+    const {user, message} = this.state
+
     return (
       <div className="ui container pt-3">
-        <TopNavigation logout={this.logout} isAuth={this.state.user.token} />
+        <TopNavigation logout={this.logout} isAuth={user.token} />
+
+        {message && (
+          <div className="ui info message">
+            <i className="close icon" onClick={() => this.setMessage("")} />
+            {message}
+          </div>
+        )}
+
         <Route exact path="/">
           <HomePage/>
         </Route>
@@ -53,7 +66,13 @@ export class App extends Component {
         )} />
         <Route path="/film/:_id" exact component={Film} />
 
-        <Route path="/singup" exact component={SignupPage} />
+        <Route
+          path="/signup"
+          render={props => (
+            <SignupPage {...props} setMessage={this.setMessage} />
+          )}
+        />
+
         <Route path="/login" exact render={
           props => <LoginPage {...props} login={this.login}/>
         }/>
