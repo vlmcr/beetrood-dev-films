@@ -1,4 +1,4 @@
-import React, {Component} from "react"
+import React, {useEffect, useState} from "react"
 import TopNavigation from "./TopNavigation"
 import {Route} from "react-router-dom";
 import Film from "./films/Film";
@@ -12,83 +12,72 @@ const FilmsPage = Async(lazyImport("./FilmsPage"));
 const SignupPage = Async(lazyImport("./SignupPage"));
 const LoginPage = Async(lazyImport("./LoginPage"));
 
-export class App extends Component {
+const initialState = {
+  token: null,
+  role: "user",
+}
 
-  state = {
-    user: {
-      token: undefined,
-      role: "",
-      message: "",
-    }
-  }
+const App = props =>  {
+  const [user, setUser] = useState(initialState)
+  const [message, setMessage] = useState("")
 
-  setMessage = message => this.setState({message})
-
-  componentDidMount() {
+  useEffect(() => {
     if (localStorage.filmsToken) {
-      this.setState({
-        user: {
-          token: localStorage.filmsToken,
-          role: jwtDecode(localStorage.filmsToken).user.role
-        }
+      setUser({
+        token: localStorage.filmsToken,
+        role: jwtDecode(localStorage.filmsToken).user.role
       })
       setAuthorizationHeader(localStorage.filmsToken)
     }
-  }
+  }, [])
 
-  login = token => {
-    this.setState({
-      user: {
-        token,
-        role: jwtDecode(token).user.role
-      }
+  const login = token => {
+    setUser({
+      token,
+      role: jwtDecode(token).user.role
     })
     localStorage.filmsToken = token
     setAuthorizationHeader(token)
   }
 
-  logout = () => {
-    this.setState({user: {token: null}})
+  const logout = () => {
+    setUser({token: null, role: "user"})
     setAuthorizationHeader()
     delete localStorage.filmsToken
   }
 
-  render() {
-    const {user, message} = this.state
+  return (
+    <div className="ui container pt-3">
+      <TopNavigation logout={logout} isAuth={user.token} isAdmin={user.role === "admin"} />
 
-    return (
-      <div className="ui container pt-3">
-        <TopNavigation logout={this.logout} isAuth={user.token} isAdmin={user.role === "admin"} />
+      {message && (
+        <div className="ui info message">
+          <i className="close icon" onClick={() => setMessage("")} />
+          {message}
+        </div>
+      )}
 
-        {message && (
-          <div className="ui info message">
-            <i className="close icon" onClick={() => this.setMessage("")} />
-            {message}
-          </div>
+      <Route exact path="/">
+        <HomePage/>
+      </Route>
+
+      <Route path="/films" render={props => (
+        <FilmsPage {...props} user={user} />
+      )} />
+      <Route path="/film/:_id" exact component={Film} />
+
+      <Route
+        path="/signup"
+        render={props => (
+          <SignupPage {...props} setMessage={setMessage} />
         )}
+      />
 
-        <Route exact path="/">
-          <HomePage/>
-        </Route>
-
-        <Route path="/films" render={props => (
-          <FilmsPage {...props} user={this.state.user} />
-        )} />
-        <Route path="/film/:_id" exact component={Film} />
-
-        <Route
-          path="/signup"
-          render={props => (
-            <SignupPage {...props} setMessage={this.setMessage} />
-          )}
-        />
-
-        <Route path="/login" exact render={
-          props => <LoginPage {...props} login={this.login}/>
-        }/>
-      </div>
-    )
-  }
+      <Route path="/login" exact render={
+        props => <LoginPage {...props} login={login}/>
+      }/>
+    </div>
+  )
 }
 
 export default App
