@@ -16,7 +16,7 @@ const FilmCard = ({film}) => {
       <div className="ui two buttons">
         {confirm ? (
           <>
-              <span className="ui red basic button" onClick={deleteFilm(film)}>
+              <span className="ui red basic button" onClick={() => deleteFilm(film)}>
                 <i className="ui icon check" />
                 YES
               </span>
