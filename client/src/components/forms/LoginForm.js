@@ -42,7 +42,7 @@ const LoginForm = props => {
   return (
     <form className={cls} onSubmit={handleSubmit}>
       <div className={errors.email ? "error field" : "field"}>
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email">email</label>
         <input
           type="email"
           name="email"
