@@ -25,3 +25,13 @@ test("Debug", () => {
   );
   debug()
 })
+
+test("LoginForm should render correct", () => {
+  const { container } = render(
+    <MemoryRouter>
+      <LoginForm />
+    </MemoryRouter>
+  );
+
+  expect(container.firstChild).toMatchSnapshot()
+})
