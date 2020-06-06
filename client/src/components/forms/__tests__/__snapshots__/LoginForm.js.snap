@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`LoginForm should render correct 1`] = `
+exports[`LoginForm test snapshot 1`] = `
 <form
   class="ui form"
 >
@@ -47,7 +47,7 @@ exports[`LoginForm should render correct 1`] = `
   >
     <button
       class="ui button primary"
-      data-test-id="login-button"
+      data-testid="login-button"
     >
       Login
     </button>
