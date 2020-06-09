@@ -61,20 +61,39 @@ const data = {
 //   expect(submit).toHaveBeenCalledWith(data)
 // })
 
-test("LoginForm test submit (user event)", async () => {
-  const { getByLabelText, getByTestId } = render(
-    <MemoryRouter>
-      <LoginForm submit={submit}/>
-    </MemoryRouter>
-  );
+// test("LoginForm test submit (user event)", async () => {
+//   const { getByLabelText, getByTestId } = render(
+//     <MemoryRouter>
+//       <LoginForm submit={submit}/>
+//     </MemoryRouter>
+//   );
+//
+//   const emailElement = getByLabelText(/email/i);
+//   const passwordElement = getByLabelText(/password/i);
+//   const loginButton = getByTestId("login-button");
+//
+//   user.type(emailElement, data.email);
+//   user.type(passwordElement, data.password);
+//
+//   fireEvent.click(loginButton);
+//   expect(submit).toHaveBeenCalledTimes(1);
+// })
 
-  const emailElement = getByLabelText(/email/i);
-  const passwordElement = getByLabelText(/password/i);
-  const loginButton = getByTestId("login-button");
+test("should show errors message", () => {
+  const {getByLabelText, getByTestId, getByRole} = render(
+    <MemoryRouter><LoginForm /></MemoryRouter>
+  )
 
-  user.type(emailElement, data.email);
-  user.type(passwordElement, data.password);
+  const emailEl = getByLabelText(/email/i);
+  const passwordEl = getByLabelText(/password/i);
+  const btn = getByTestId("login-button");
 
-  fireEvent.click(loginButton);
-  expect(submit).toHaveBeenCalledTimes(1);
+  user.type(emailEl, "not correct email");
+  user.type(passwordEl, data.password);
+
+  fireEvent.click(btn);
+
+  // const formMessage = getByRole("alert");
+  // expect(formMessage).not.toBeEmpty();
+  // expect(formMessage).toHaveTextContent(/Email is not correct/i);
 })
