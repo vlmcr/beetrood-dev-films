@@ -1,19 +1,12 @@
 import React from 'react';
 import useCounter from "../useCounter";
-import {act, render} from "@testing-library/react";
+import {renderHook, act} from "@testing-library/react-hooks";
 
 test("useCounter", () => {
-  let result = {};
-
-  function TestComponent() {
-    result.current = useCounter()
-    return null;
-  }
-
-  render(<TestComponent />);
+  const { result } = renderHook(useCounter);
   expect(result.current.count).toBe(0)
   act(() => { result.current.increment() })
-  expect(result.current.count).toBe(1)
+  expect(result.current.count).toBe(0)
   act(() => { result.current.decrement() })
   expect(result.current.count).toBe(0)
 })
